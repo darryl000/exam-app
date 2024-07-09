@@ -1,0 +1,57 @@
+# version: '3.8'
+
+# services:
+#   app:
+#     build: .
+#     ports:
+#       - "3005:3000"
+#     depends_on:
+#       - mongo
+#       - wait-for-it
+#     environment:
+#       MONGO_URI: mongodb://mongo:27017/dashboard
+#     command: ["./wait-for-it.sh", "mongo:27017", "--", "node", "index.js"]
+
+#   mongo:
+#     image: mongo
+#     ports:
+#       - "27018:27017"
+#     environment:
+#       MONGO_INITDB_DATABASE: dashboard
+#     volumes:
+#       - mongodb_data:/data/db
+
+#   wait-for-it:
+#     image: busybox
+#     volumes:
+#       - ./wait-for-it.sh:/wait-for-it.sh
+#     command: ["chmod", "+x", "/wait-for-it.sh"]
+
+# volumes:
+#   mongodb_data:
+#     driver: local
+
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3005:3000"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
+    # Volume pour persister les données MongoDB
